@@ -9,6 +9,7 @@
 
 from dataclasses import dataclass, field
 import copy
+import random
 
 
 @dataclass
@@ -129,13 +130,65 @@ def print_checksum(results):
     print(f"\nCHECKSUM: {compute_checksum(results)}")
 
 
-# Scheduling algorithms (to be implemented)
+# Scheduling algorithms
 def fcfs(processes, latency):
-    raise NotImplementedError("FCFS scheduling not implemented yet.")
+    procs = clone_processes(processes)
+    trace = []
+    time = 0
+    first_dispatch = True
+
+    while not all_complete(procs):
+        ready = sorted(
+            get_ready_processes(procs, time),
+            key=lambda p: (p.arrival, int(p.pid[1:]))
+        )
+
+        if not ready:
+            time = get_next_arrival_time(procs, time)
+            continue
+
+        current = ready[0]
+
+        if not first_dispatch:
+            trace.append(f"@t={time}, context switch {latency} occurs")
+            time += latency
+
+        trace.append(f"@t={time}, {current.pid} selected for {current.remaining} units")
+        time = run_for(current, current.remaining, time)
+        first_dispatch = False
+
+    trace.append(f"@t={time}, all processes complete")
+    return make_result("FCFS", procs, trace)
 
 
 def sjf(processes, latency):
-    raise NotImplementedError("SJF scheduling not implemented yet.")
+    procs = clone_processes(processes)
+    trace = []
+    time = 0
+    first_dispatch = True
+
+    while not all_complete(procs):
+        ready = sorted(
+            get_ready_processes(procs, time),
+            key=lambda p: (p.burst, p.arrival, int(p.pid[1:]))
+        )
+
+        if not ready:
+            time = get_next_arrival_time(procs, time)
+            continue
+
+        current = ready[0]
+
+        if not first_dispatch:
+            trace.append(f"@t={time}, context switch {latency} occurs")
+            time += latency
+
+        trace.append(f"@t={time}, {current.pid} selected for {current.remaining} units")
+        time = run_for(current, current.remaining, time)
+        first_dispatch = False
+
+    trace.append(f"@t={time}, all processes complete")
+    return make_result("SJF", procs, trace)
 
 
 def srtf(processes, latency):
@@ -146,36 +199,58 @@ def rr(processes, quantum, latency):
     raise NotImplementedError("Round Robin scheduling not implemented yet.")
 
 
-def random_selection(processes, latency):
-    raise NotImplementedError("Random scheduling not implemented yet.")
+def random_selection(processes, latency, rng):
+    procs = clone_processes(processes)
+    trace = []
+    time = 0
+    first_dispatch = True
+
+    while not all_complete(procs):
+        ready = get_ready_processes(procs, time)
+
+        if not ready:
+            time = get_next_arrival_time(procs, time)
+            continue
+
+        current = rng.choice(ready)
+
+        if not first_dispatch:
+            trace.append(f"@t={time}, context switch {latency} occurs")
+            time += latency
+
+        trace.append(f"@t={time}, {current.pid} selected for {current.remaining} units")
+        time = run_for(current, current.remaining, time)
+        first_dispatch = False
+
+    trace.append(f"@t={time}, all processes complete")
+    return make_result("Random", procs, trace)
 
 
 def main():
-    # Temporary example processes so the base structure can be tested
     processes = [
         Process("P1", 0, 5),
         Process("P2", 1, 3),
         Process("P3", 2, 6)
     ]
 
+    latency = 1
+
     print_process_table(processes)
 
-    # Placeholder for where scheduling algorithms will run
+    for seed in [1, 2, 3, 4, 5, 6, 7, 8]:
+        rng = random.Random(seed)
+        result = random_selection(processes, latency, rng)
+        print(f"\nSeed = {seed}")
+        print_algorithm_result(result)
+
+    print("\nFCFS and SJF tests:")
+
     results = []
+    results.append(fcfs(processes, latency))
+    results.append(sjf(processes, latency))
 
-    # Example of how results will eventually be collected
-    # results.append(fcfs(processes, latency))
-    # results.append(sjf(processes, latency))
-    # results.append(srtf(processes, latency))
-    # results.append(rr(processes, quantum, latency))
-    # results.append(random_selection(processes, latency))
-
-    # When algorithms are implemented, checksum will be printed
-    if results:
-        for r in results:
-            print_algorithm_result(r)
-
-        print_checksum(results)
+    for r in results:
+        print_algorithm_result(r)
 
 
 if __name__ == "__main__":
