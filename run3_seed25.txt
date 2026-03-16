@@ -1,0 +1,99 @@
+Enter random seed: 25
+Enter number of processes (2-10): 5
+Enter last arrival time (0-99): 8
+Enter maximum burst time (1-100): 5
+Enter RR quantum (1-100): 2
+Enter context-switch latency (0-10): 1
+
+Generated process table:
+P1: arrival=6, burst=1
+P2: arrival=3, burst=3
+P3: arrival=7, burst=1
+P4: arrival=4, burst=1
+P5: arrival=4, burst=5
+Context-switch latency L = 1
+RR quantum q = 2
+
+FCFS Trace:
+@t=3, P2 selected for 3 units
+@t=6, context switch 1 occurs
+@t=7, P4 selected for 1 units
+@t=8, context switch 2 occurs
+@t=9, P5 selected for 5 units
+@t=14, context switch 3 occurs
+@t=15, P1 selected for 1 units
+@t=16, context switch 4 occurs
+@t=17, P3 selected for 1 units
+@t=18, all processes complete
+Completed in 18 cycles.
+Avg wait = 5.40
+Avg response = 5.40
+
+SJF Trace:
+@t=3, P2 selected for 3 units
+@t=6, context switch 1 occurs
+@t=7, P4 selected for 1 units
+@t=8, context switch 2 occurs
+@t=9, P1 selected for 1 units
+@t=10, context switch 3 occurs
+@t=11, P3 selected for 1 units
+@t=12, context switch 4 occurs
+@t=13, P5 selected for 5 units
+@t=18, all processes complete
+Completed in 18 cycles.
+Avg wait = 3.80
+Avg response = 3.80
+
+SRTF Trace:
+@t=3, P2 selected for 1 units
+@t=4, context switch 1 occurs
+@t=5, P4 selected for 1 units
+@t=6, context switch 2 occurs
+@t=7, P1 selected for 1 units
+@t=8, context switch 3 occurs
+@t=9, P3 selected for 1 units
+@t=10, context switch 4 occurs
+@t=11, P2 selected for 2 units
+@t=13, context switch 5 occurs
+@t=14, P5 selected for 5 units
+@t=19, all processes complete
+Completed in 19 cycles.
+Avg wait = 4.20
+Avg response = 2.80
+
+RR (q=2) Trace:
+@t=3, P2 selected for 2 units
+@t=5, context switch 1 occurs
+@t=6, P4 selected for 1 units
+@t=7, context switch 2 occurs
+@t=8, P5 selected for 2 units
+@t=10, context switch 3 occurs
+@t=11, P2 selected for 1 units
+@t=12, context switch 4 occurs
+@t=13, P1 selected for 1 units
+@t=14, context switch 5 occurs
+@t=15, P3 selected for 1 units
+@t=16, context switch 6 occurs
+@t=17, P5 selected for 2 units
+@t=19, P5 selected for 1 units
+@t=20, all processes complete
+Completed in 20 cycles.
+Avg wait = 6.80
+Avg response = 4.20
+
+Random Trace:
+@t=3, P2 selected for 3 units
+@t=6, context switch 1 occurs
+@t=7, P1 selected for 1 units
+@t=8, context switch 2 occurs
+@t=9, P3 selected for 1 units
+@t=10, context switch 3 occurs
+@t=11, P5 selected for 5 units
+@t=16, context switch 4 occurs
+@t=17, P4 selected for 1 units
+@t=18, all processes complete
+Completed in 18 cycles.
+Avg wait = 4.60
+Avg response = 4.60
+
+CHECKSUM: 4653
